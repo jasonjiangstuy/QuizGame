@@ -10,6 +10,16 @@ def home():
     'index.html'
   )
 
+@app.route('/LaunchGame', methods=['GET'])
+def Admin():
+  return render_template(
+    'Lanuch.html'
+  )
+
+@app.route('/AppRoute', methods=['GET', 'POST'])
+def control():
+  pass
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port='3000')
 
