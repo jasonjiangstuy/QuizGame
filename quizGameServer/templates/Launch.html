@@ -2,14 +2,16 @@
 <head>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="{{url_for('static', filename='js/launch.js')}}" type="text/javascript"></script>
+  <link href="{{url_for('static', filename='css/launch.css')}}" rel="stylesheet">
+    </script>
 </head>
 <body>
-    <form action="/LaunchGame">
-        <button id="addNewQuestion"></button>
-        <div id="quesitonContainer">
-            
+        <button id="addNewQuestion">Add New Question</button>
+        <button id="removeQuestion">Remove Question</button>
+        <div id="questionContainer">
+
         </div>
-        <button method="submit"></button> 
-    </form>
+        <button id='submit'>Submit</button>
 </body>
 </html>
