@@ -39,19 +39,21 @@ $(document).ready(function() {
         question -= 1;
       }
     })
-
+//Format: [q# ,[q, c, [[a,x],[b,x],[c,x],[d,x]]]]
     $('#submit').click(function() {
         var AllQuestions = [];
-        var onequestion = []
-        var mainquestion
+
         $('.formHeaders').each(function() { // itterate through each question
             // console.log(this.value);
+            let onequestion = []
+            let mainquestion
+            let ACs = []
             var thisQuestion = this.getAttribute('data-starting') // Get what question we are going through
-            onequestion.push(this.value)
-
+            // var mainquestion = thisQuestion
+            ACs = []
             if (this.value && this.value != '') {
+              mainquestion = this.value
                 //append question to main list as item 1
-                var mainquestion = thisQuestion
             } else {
                 alert(this.name + ' must be filled out')
                 throw new Error('stop')
@@ -66,15 +68,15 @@ $(document).ready(function() {
             // console.log('test');
             let counter = 0
             let stopper = true
-            var ACs = []
+
             $('.formItems').each(function() {
                 // console.log('test');
                 // console.log(counter);
                 if (this.getAttribute('data-question') == thisQuestion) {
                     if (this.getAttribute('type') == 'radio') { // check the checked answer
-
                         counter += 1;
                         if (this.checked == true) {
+                            ACs.push(mainquestion)
                             ACs.push(this.id)
                             stopper = false;
                         }
@@ -115,35 +117,48 @@ $(document).ready(function() {
             //   broken()
             // }
 
-            onequestion.push(mainquestion)
+            onequestion.push(thisQuestion)
+            console.log(thisQuestion);
             onequestion.push(ACs);
-            AllQuestions.push([onequestion])
+            console.log(ACs);
+            AllQuestions.push(onequestion)
+            console.log(onequestion);
         })
         console.log(AllQuestions);
 
         // make ajax request
+        // var form = $('.modelForm')[0]
         var fd = new FormData();
 
-        AllQuestions.forEach((item, i) => {
-          //item is a single:
-          console.log(item);
-          let questionHead = item[0][0]
-          console.log(item[0][1]);
-          let questionAC = item[1].unshift(item[0][1])
-          console.log(questinHead);
-          console.log(questionAC);
-          fd.append(questionHead, questionAC);
+        //
+        // AllQuestions.forEach((item, i) => {
+        //   //item is a single:
+        //   // console.log(item);
+        //   let questionHead = item[0]
+        //   // console.log(item[0]);
+        //   let questionAC = item[1]
+        //   // console.log(questionHead);
+        //   // console.log(questionAC);
+        //   console.log(questionHead, questionAC);
+        //   fd.append(questionHead, questionAC);
 
-
-        });
+          fd.append('Questions', JSON.stringify(AllQuestions));
+        //
+        // // });
+        //
         if (question > 0) {
-
-
+        //
+        //   for (let key of formData.entries()){
+        //     console.log(key[0] + ', ', key[0])
+        //   }
+        //   console.log(fd);
         $.ajax({
           type: 'POST',
           url: '/LaunchGame',
+          // data: JSON.stringify({ paramName: AllQuestions}),
           data: fd,
           processData: false,
+          dataType: 'text',
           contentType: false,
           success: function(data) {
             if (data == 'success'){
@@ -151,6 +166,7 @@ $(document).ready(function() {
               window.location.reload(true);
             }else {
               alert(data);
+
             }
           },
           error: function(e){
